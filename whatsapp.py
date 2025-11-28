@@ -26,7 +26,6 @@ class WhatsAppTrayApp:
         self.window = Gtk.Window(title="WhatsApp Desktop")
         self.window.set_default_size(900, 700)
         self.window.connect("delete-event", self.on_window_delete)
-        self.window.connect("window-state-event", self.on_window_state_event)
 
         # WebView con WhatsApp Web
         self.webview = WebKit2.WebView()
@@ -142,24 +141,6 @@ class WhatsAppTrayApp:
 
     def quit(self, *_args):
         Gtk.main_quit()
-
-    def on_window_state_event(self, window, event):
-        """
-        Si la ventana pasa a estado minimizado (iconified),
-        la tratamos como si se hubiera "cerrado": la ocultamos
-        y mostramos el mensaje de bandeja.
-        """
-        # ¿Cambió el estado de "iconified"?
-        if event.changed_mask & Gdk.WindowState.ICONIFIED:
-            # ¿Nuevo estado incluye minimizada?
-            if event.new_window_state & Gdk.WindowState.ICONIFIED:
-                # Reutilizamos la misma lógica de cerrar (X)
-                return self.on_window_delete(window, None)
-
-        # Para otros cambios de estado, no hacemos nada especial
-        return False
-
-
 
 if __name__ == "__main__":
     app = WhatsAppTrayApp()
